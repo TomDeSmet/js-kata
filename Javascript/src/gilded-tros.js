@@ -10,6 +10,12 @@ export class GildedTros {
             item.sellIn--;
         };
         
+        const setLimitsToQuality = (quality) => {
+            if (quality <= 0) return 0;
+            if (quality >= 50) return 50;
+            return quality;
+        };
+        
         this.items.forEach(item => {
             // If sellIn has passed, quality degrades twice as fast.
             let degradeRate = item.sellIn <= 0 ? this.#DEFAULT_DEGRADE_RATE * 2 : this.#DEFAULT_DEGRADE_RATE;
@@ -38,8 +44,8 @@ export class GildedTros {
                     let itemQuality = item.quality + qualityRate;
                     // Quality drops to 0 when sellIn date is passed.
                     if (item.sellIn <= 0) itemQuality = 0;
-                    // Quality can not be over 50. TODO: Abstract this for every item except legendary?
-                    item.quality = Math.min(itemQuality, 50);
+
+                    item.quality = setLimitsToQuality(itemQuality);
                     break;
                 case "Good Wine":
                     decreaseSellIn(item);
@@ -53,13 +59,13 @@ export class GildedTros {
                     // These items degrade in quality twice as fast as normal items.
                     degradeRate *= 2;
                     item.quality -= degradeRate;
-                    item.quality = Math.max(item.quality, 0);
+                    item.quality = setLimitsToQuality(item.quality);
                     break;
                 default:
                     decreaseSellIn(item);
                     // Normal items decrease in quality.
                     item.quality -= degradeRate;
-                    item.quality = Math.max(item.quality, 0);
+                    item.quality = setLimitsToQuality(item.quality);
             }
         });
     }
