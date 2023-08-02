@@ -5,17 +5,17 @@ export class GildedTros {
         this.items = items;
     }
     
+    #decreaseSellIn = (item) => {
+        item.sellIn--;
+    };
+    
+    #setLimitsToQuality = (quality) => {
+        if (quality <= 0) return 0;
+        if (quality >= 50) return 50;
+        return quality;
+    };
+    
     updateQuality() {
-        const decreaseSellIn = (item) => {
-            item.sellIn--;
-        };
-        
-        const setLimitsToQuality = (quality) => {
-            if (quality <= 0) return 0;
-            if (quality >= 50) return 50;
-            return quality;
-        };
-        
         this.items.forEach(item => {
             // If sellIn has passed, quality degrades twice as fast.
             let degradeRate = item.sellIn <= 0 ? this.#DEFAULT_DEGRADE_RATE * 2 : this.#DEFAULT_DEGRADE_RATE;
@@ -33,7 +33,7 @@ export class GildedTros {
                      * For this product type, this means the quality of the product needs to be 0 at the end of the day
                      * as the conference is over by the end and tickets will be useless.
                      */
-                    decreaseSellIn(item);
+                    this.#decreaseSellIn(item);
                     
                     // Set default quality rate.
                     let qualityRate = 1;
@@ -45,27 +45,27 @@ export class GildedTros {
                     // Quality drops to 0 when sellIn date is passed.
                     if (item.sellIn <= 0) itemQuality = 0;
 
-                    item.quality = setLimitsToQuality(itemQuality);
+                    item.quality = this.#setLimitsToQuality(itemQuality);
                     break;
                 case "Good Wine":
-                    decreaseSellIn(item);
+                    this.#decreaseSellIn(item);
                     // 'Good wine' increases in quality.
                     if (item.quality < 50) item.quality++;
                     break;
                 case "Duplicate Code":
                 case "Long Methods":
                 case "Ugly Variable Names":
-                    decreaseSellIn(item);
+                    this.#decreaseSellIn(item);
                     // These items degrade in quality twice as fast as normal items.
                     degradeRate *= 2;
                     item.quality -= degradeRate;
-                    item.quality = setLimitsToQuality(item.quality);
+                    item.quality = this.#setLimitsToQuality(item.quality);
                     break;
                 default:
-                    decreaseSellIn(item);
+                    this.#decreaseSellIn(item);
                     // Normal items decrease in quality.
                     item.quality -= degradeRate;
-                    item.quality = setLimitsToQuality(item.quality);
+                    item.quality = this.#setLimitsToQuality(item.quality);
             }
         });
     }
