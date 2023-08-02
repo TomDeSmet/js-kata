@@ -12,7 +12,7 @@ export class GildedTros {
         
         this.items.forEach(item => {
             // If sellIn has passed, quality degrades twice as fast.
-            const degradeRate = item.sellIn <= 0 ? this.#DEFAULT_DEGRADE_RATE * 2 : this.#DEFAULT_DEGRADE_RATE;
+            let degradeRate = item.sellIn <= 0 ? this.#DEFAULT_DEGRADE_RATE * 2 : this.#DEFAULT_DEGRADE_RATE;
             
             switch (item.name) {
                 case "B-DAWG Keychain":
@@ -45,6 +45,14 @@ export class GildedTros {
                     decreaseSellIn(item);
                     // 'Good wine' increases in quality.
                     if (item.quality < 50) item.quality++;
+                    break;
+                case "Duplicate Code":
+                case "Long Methods":
+                case "Ugly Variable Names":
+                    decreaseSellIn(item);
+                    // These items degrade in quality twice as fast as normal items.
+                    degradeRate *= 2;
+                    if (item.quality > 0) item.quality -= degradeRate;
                     break;
                 default:
                     decreaseSellIn(item);
