@@ -52,12 +52,14 @@ export class GildedTros {
                     decreaseSellIn(item);
                     // These items degrade in quality twice as fast as normal items.
                     degradeRate *= 2;
-                    if (item.quality > 0) item.quality -= degradeRate;
+                    item.quality -= degradeRate;
+                    item.quality = Math.max(item.quality, 0);
                     break;
                 default:
                     decreaseSellIn(item);
                     // Normal items decrease in quality.
-                    if (item.quality > 0) item.quality -= degradeRate;
+                    item.quality -= degradeRate;
+                    item.quality = Math.max(item.quality, 0);
             }
         });
         
