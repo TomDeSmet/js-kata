@@ -45,7 +45,12 @@ export class GildedTros {
                     break;
                 case "Backstage passes for Re:Factor":
                 case "Backstage passes for HAXX":
-                    // 'Backstage passes' increases in quality until sell date, so we adjust the quality rate.
+                    /* 'Backstage passes' increase in quality until the event has ended, so we adjust the quality rate.
+                     * This differs a bit from the original code: the original code doubles/triples the quality only
+                     * at the end of the next day. But I think quality should already increase as much at the end
+                     * of the current day. As the next day is the 10th or 5th sellIn marker and the quality should
+                     * already be up then (as the requirements suggest).
+                     */
                     if (item.sellIn <= 10) qualityRate = 2;
                     if (item.sellIn <= 5) qualityRate = 3;
                     // Calculate the new quality.
