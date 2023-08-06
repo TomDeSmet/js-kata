@@ -29,7 +29,7 @@ export class GildedTros {
             item.sellIn--;
             
             // If sellIn has passed, quality degrades twice as fast.
-            let degradeRate = item.sellIn <= 0 ? this.#DEFAULT_DEGRADE_RATE * 2 : this.#DEFAULT_DEGRADE_RATE;
+            let degradeRate = item.sellIn < 0 ? this.#DEFAULT_DEGRADE_RATE * 2 : this.#DEFAULT_DEGRADE_RATE;
             
             // Set default quality rate.
             let qualityRate = 1;
